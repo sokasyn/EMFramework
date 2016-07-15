@@ -9,8 +9,10 @@ import android.content.SharedPreferences.Editor;
  */
 public class PreferenceHelper {
 
+    private static final String DEFAULT_PREF_NAME = "default_prefs";
+
     // 优化:Context
-    public static void WriteSharedPreferences(Context context, String prefsName, String name, Object value) {
+    public static void writeSharedPreferences(Context context, String prefsName, String name, Object value) {
         if (name == null || value == null) {
             return;
         }
