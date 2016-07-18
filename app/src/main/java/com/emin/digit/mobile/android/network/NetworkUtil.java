@@ -9,7 +9,7 @@ import android.telephony.TelephonyManager;
 /**
  * Created by Samson on 16/7/18.
  */
-public class NetworkChecker {
+public class NetworkUtil {
 
     /**
      * 检测手机是否开启GPRS网络,需要调用ConnectivityManager,TelephonyManager 服务.
