@@ -31,7 +31,6 @@ public class BitmapHelper {
     /**
      * 缩放图片
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:56:16
      * @param bm
      * @param newWidth
      * @param newHeight
@@ -53,7 +52,6 @@ public class BitmapHelper {
     /**
      * drawable 转为 Bitmap
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:56:25
      * @param drawable
      * @return Bitmap
      */
@@ -68,7 +66,6 @@ public class BitmapHelper {
     /**
      * 缩放Drawable
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:56:40
      * @param drawable
      * @param w
      * @param h
@@ -89,7 +86,6 @@ public class BitmapHelper {
     /**
      * bitmap 转 Drawable
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:56:49
      * @param bitmap
      * @return Drawable
      */
@@ -99,9 +95,8 @@ public class BitmapHelper {
     }
 
     /**
-     * 图片创建倒影 TODO(这里用一句话描述这个方法的作用)
+     * 图片创建倒影
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:58:39
      * @param originalImage
      * @param number
      * @return Bitmap
@@ -144,7 +139,6 @@ public class BitmapHelper {
     /**
      * 图片增加边框
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:58:28
      * @param bitmap
      * @param color
      * @return Bitmap
@@ -166,7 +160,6 @@ public class BitmapHelper {
     /**
      * 字节转图片
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:58:03
      * @param data
      * @return Bitmap
      */
@@ -177,7 +170,6 @@ public class BitmapHelper {
     /**
      * 图片转字节
      *
-     * @author gdpancheng@gmail.com 2013-10-12 下午3:57:54
      * @param bitmap
      * @return byte[]
      */

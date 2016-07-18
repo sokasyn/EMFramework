@@ -43,9 +43,8 @@ public class StringUtil {
     }
 
     /**
-     * 数组拼接成字符串 中间以逗号连接
+     * 数组拼接成字符串,以输入的symbol作为中间连接,如逗号等
      *
-     * @author gdpancheng@gmail.com 2014-2-21 下午5:14:52
      * @param data
      *            需要连接的数据
      * @param symbol
@@ -66,7 +65,6 @@ public class StringUtil {
     /**
      * 数组拼接成字符串 以逗号隔开
      *
-     * @author gdpancheng@gmail.com 2014-2-21 下午5:15:20
      * @param data
      * @return String
      */
@@ -78,7 +76,6 @@ public class StringUtil {
     /**
      * 判断是否为空
      *
-     * @author gdpancheng@gmail.com 2013-10-15 下午10:24:22
      * @param text
      * @return boolean
      */
@@ -134,7 +131,6 @@ public class StringUtil {
     /**
      * 字符串重复多少遍
      *
-     * @author gdpancheng@gmail.com 2013-10-16 下午10:43:14
      * @param str
      * @param times
      * @return String
@@ -150,7 +146,6 @@ public class StringUtil {
     /**
      * 获得数组中最长的字符串的长度
      *
-     * @author gdpancheng@gmail.com 2013-10-16 下午10:43:02
      * @param keys
      * @return int
      */
@@ -168,7 +163,6 @@ public class StringUtil {
     /**
      * 替换string中的指定字符串
      *
-     * @author gdpancheng@gmail.com 2013-10-16 下午10:42:22
      * @param strSearch
      * @param replacement
      * @param body
@@ -195,7 +189,6 @@ public class StringUtil {
     /**
      * 判断 char c 是汉字还是数字 还是字母
      *
-     * @author gdpancheng@gmail.com 2013-10-16 下午10:41:15
      * @param c
      * @return int
      */
@@ -222,7 +215,6 @@ public class StringUtil {
     /**
      * 判断字节数 汉字2个字节英文1个字节
      *
-     * @author gdpancheng@gmail.com 2013-10-16 下午10:43:53
      * @param content
      * @return int
      */
@@ -267,7 +259,6 @@ public class StringUtil {
      * isEmpty(&quot;  &quot;) = false;
      * </pre>
      *
-     * @author gdpancheng@gmail.com 2013-10-16 下午10:48:02
      * @param str
      * @return boolean
      */
