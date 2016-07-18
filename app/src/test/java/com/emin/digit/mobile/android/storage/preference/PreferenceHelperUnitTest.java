@@ -5,6 +5,7 @@ import org.junit.Test;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.mock.MockApplication;
@@ -16,6 +17,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.mockito.Mockito.mock;
 
 import static org.mockito.Mockito.when;
@@ -40,9 +45,31 @@ public class PreferenceHelperUnitTest extends AndroidTestCase{
 
     @Test
     public void testWriteSharedPreferences(){
-        Context context  = getContext();
-        System.out.println("conext:" + context);
+//        Context context  = getContext();
+//        System.out.println("conext:" + context);
+        long ct = System.currentTimeMillis();
+        debug("currentTimeMillis :" + ct);
 
+
+        long milliSecsPerYear = 365 * 24 * 60 *60 *1000;
+        debug("milliSecsPerYear:" + milliSecsPerYear + "");
+
+        //     1 471 228 928
+        //   147 122 892 800
+        // 1 468 834 597 873
+        // 9223372036854775807
+
+//        Date nowDate = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss SSS");
+//        String dateString = dateFormat.format(nowDate);
+//        debug("Template Date String:" + dateString);
+//
+//        debug("Default date string:" + nowDate.toString());
+    }
+
+
+    private void debug(String debugInfo){
+        System.out.println(debugInfo);
     }
 
     /*
