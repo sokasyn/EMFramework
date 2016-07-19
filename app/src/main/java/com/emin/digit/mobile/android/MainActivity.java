@@ -12,7 +12,9 @@ import com.emin.digit.mobile.android.util.StringUtil;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnStart;
-    private EditText inputText;
+    private Button btnShow;
+    private EditText keyText;
+    private EditText valueText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,11 @@ public class MainActivity extends AppCompatActivity {
         btnStart = (Button)findViewById(R.id.btnGo);
         btnStart.setOnClickListener(clickListener);
 
-        EditText inputText = (EditText)findViewById(R.id.idInputText);
+        btnShow = (Button)findViewById(R.id.btnShow);
+        btnShow.setOnClickListener(clickListener);
+
+        keyText = (EditText)findViewById(R.id.idKey);
+        valueText = (EditText)findViewById(R.id.idValue);
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -36,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
                     btnGoClicked();
                     break;
                 }
+                case R.id.btnShow:{
+                    btnShowClicked();
+//                    testExpired();
+                    break;
+                }
                 default:{
                     break;
                 }
@@ -44,20 +55,147 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void btnGoClicked(){
-        testCache(); // 测试缓存
+        // 测试缓存
+        // Key
+        String inputKey = getInputKey();
+        // value
+        String inputValue = getInputValue();
+
+        // 创建ACache实例
+        ACache cache = ACache.get(this);
+
+        // 1468894924463-60 Samson
+        // 1468894924463-0 A
+//        cache.put(inputKey, inputValue, 60 * 5);
     }
 
-    private void testCache(){
-        String strInput = inputText.getText().toString();
-        debug(strInput);
-        if(StringUtil.isBlank(strInput) || StringUtil.isEmpty(strInput)){
-            return;
-        }
+    private void btnShowClicked(){
+        String inputKey = getInputKey();
         ACache cache = ACache.get(this);
-        cache.put("key_name", "Samson", 10); // 保存10秒，测试10秒之后会不会自动删除
+        String valueForKey = cache.getAsString(inputKey);
+        valueText.setText(valueForKey);
+    }
+
+    private String getInputKey(){
+        // key
+        String strKey = keyText.getText().toString();
+        debug("input key:" + strKey);
+        if(StringUtil.isBlank(strKey) || StringUtil.isEmpty(strKey)){
+            debug("input key is blank or empty!");
+            return "";
+        }
+        return strKey;
+    }
+
+    private String getInputValue(){
+        String strValue = valueText.getText().toString();
+        debug("input value:" + strValue);
+        if(StringUtil.isBlank(strValue) || StringUtil.isEmpty(strValue)){
+            debug("input value is blank or empty!");
+            return "";
+        }
+        return strValue;
+    }
+
+    // 1468894924463-60 Samson
+    private byte[] copyRangeOf(byte[] data,int from ,int to){
+        int newLength = to - from;
+        byte[] newData = new byte[newLength];
+        System.arraycopy(data,from,newData,0,newLength);
+        return newData;
+    }
+
+    private void testExpired(){
+
+        String testString = "1468894924463-1 Samson";
+//        String testString = System.currentTimeMillis() + "-60 Samson";
+        String value = "Sokasyn";
+        int keepCachedTime = 50;
+        put(value,keepCachedTime);
+
+        if(isExpired(testString)){
+            debug("isExpired");
+        }else{
+            debug("is not expired");
+        }
+    }
+
+
+    // 将时间信息拼接上原始数据
+    private void put(String data, int cachedSeconds){
+        String dateInfo = createDateInfo(data,cachedSeconds);
+        debug("create date info:" + dateInfo);
+        String value = dateInfo + data;
+        debug("build value:" + value);
+    }
+
+    // 中横线连接创建时间和保存时间
+    private static final String SEPARATOR_HYPHEN = "-";
+
+    // 空格连接时间信息和实际要保存的数据
+    private static final String SEPARATOR_SPACE = " ";
+
+    /*
+     * 满足自定义的时间格式的数据
+     */
+    private boolean hashDateInfo(String data){
+        if(data!= null && data.length() > 15 && data.indexOf(SEPARATOR_HYPHEN) == 13
+                && data.indexOf(SEPARATOR_SPACE) > 14){
+            return true;
+        }
+        return false;
+    }
+
+    // 判断缓存的数据是否过期
+    private boolean isExpired(String data){
+        debug("test data:" + data);
+
+        // 不存在自定义的时间格式,说明是无限期的缓存
+        if(!hashDateInfo(data)){
+            debug("has no date info");
+            return false;
+        }
+
+        // 取出数据的时间戳:创建的时间戳
+        long createMillis = Long.parseLong(getCreateDate(data));
+
+        // 取出数据缓存时间:单位为秒
+        long cachedSeconds = Long.parseLong(getCachedSeconds(data));
+
+        // 与当前时间比较,判断时候过期
+        long currentMillis = System.currentTimeMillis();
+        if(currentMillis > (createMillis + cachedSeconds)){
+            return true;
+        }
+        return false;
+    }
+
+    // 1468894924463-60 Samson
+    private String getCreateDate(String data){
+        String cratedMillisString =  data.substring(0,13);
+        debug("cratedMillisString :" + cratedMillisString);
+        return cratedMillisString;
+    }
+
+    private String getCachedSeconds(String string){
+        int index = string.indexOf(" ");
+        String cachedSecondsString =  string.substring(14,index);
+        debug("cachedSecondsString :" + cachedSecondsString);
+        return cachedSecondsString;
+    }
+
+
+
+    private String createDateInfo(String data,int cahedSeconds){
+        return getCurrentMillis() + SEPARATOR_HYPHEN + cahedSeconds + SEPARATOR_SPACE;
+    }
+
+    private long getCurrentMillis(){
+        return System.currentTimeMillis();
     }
 
     private void debug(String stringInfo){
         System.out.println(stringInfo);
     }
+
 }

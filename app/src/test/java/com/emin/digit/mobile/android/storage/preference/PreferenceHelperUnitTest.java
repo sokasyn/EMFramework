@@ -67,6 +67,27 @@ public class PreferenceHelperUnitTest extends AndroidTestCase{
 //        debug("Default date string:" + nowDate.toString());
     }
 
+    @Test
+    public void testHas(){
+        testPid();
+        String key = "name";
+        debug("key:" + key.hashCode());
+
+        String key2 = "first name";
+        debug("key2:" + key2.hashCode());
+    }
+
+    @Test
+    public void testPid(){
+        String pid1  = "_" + android.os.Process.myPid();
+        String pid2  = "_" + android.os.Process.myPid();
+        String pid3  = "_" + android.os.Process.myPid();
+        debug("pid1 :" + pid1);
+        debug("pid2 :" + pid2);
+        debug("pid3 :" + pid3);
+
+    }
+
 
     private void debug(String debugInfo){
         System.out.println(debugInfo);

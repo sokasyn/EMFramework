@@ -63,11 +63,13 @@ public class ACache {
 	}
 
 	public static ACache get(Context ctx, String cacheName) {
+		debug("0 ---- ctx.getCacheDir().getAbsolutePath():" + ctx.getCacheDir().getAbsolutePath());
 		File f = new File(ctx.getCacheDir(), cacheName);
 		return get(f, MAX_SIZE, MAX_COUNT);
 	}
 
 	public static ACache get(File cacheDir) {
+		debug("1 ---- cacheDir.getAbsolutePath():" + cacheDir.getAbsolutePath());
 		return get(cacheDir, MAX_SIZE, MAX_COUNT);
 	}
 
@@ -77,12 +79,21 @@ public class ACache {
 	}
 
 	public static ACache get(File cacheDir, long max_zise, int max_count) {
-		ACache manager = mInstanceMap.get(cacheDir.getAbsoluteFile() + myPid());
-		if (manager == null) {
-			manager = new ACache(cacheDir, max_zise, max_count);
-			mInstanceMap.put(cacheDir.getAbsolutePath() + myPid(), manager);
+		debug("2 ---- cacheDir.getAbsolutePath():" + cacheDir.getAbsolutePath());
+		debug("2.1 myPid()" + myPid());
+
+		ACache cache = mInstanceMap.get(cacheDir.getAbsoluteFile() + myPid());
+
+		debug("3 ---- Key:cacheDir.getAbsoluteFile() + myPid():" + cacheDir.getAbsoluteFile() + myPid()); // ACache_15086
+
+		if (cache == null) {
+			debug("manager is null!");
+			cache = new ACache(cacheDir, max_zise, max_count);
+			mInstanceMap.put(cacheDir.getAbsolutePath() + myPid(), cache);
+		}else{
+			debug("manager is not null!");
 		}
-		return manager;
+		return cache;
 	}
 
 	private static String myPid() {
@@ -90,6 +101,7 @@ public class ACache {
 	}
 
 	private ACache(File cacheDir, long max_size, int max_count) {
+		debug("4 ---- cacheDir.getAbsoluteFile() + myPid():" + cacheDir.getAbsoluteFile());
 		if (!cacheDir.exists() && !cacheDir.mkdirs()) {
 			throw new RuntimeException("can't make dirs in "
 					+ cacheDir.getAbsolutePath());
@@ -109,7 +121,11 @@ public class ACache {
 	 *            保存的String数据
 	 */
 	public void put(String key, String value) {
+		debug("11 --- key:" + key + " value:" + value);
 		File file = mCacheManager.newFile(key);
+
+		debug("13 --- file.getAbsolutePath()" + file.getAbsolutePath());
+
 		BufferedWriter out = null;
 		try {
 			out = new BufferedWriter(new FileWriter(file), 1024);
@@ -140,7 +156,8 @@ public class ACache {
 	 *            保存的时间，单位：秒
 	 */
 	public void put(String key, String value, int saveTime) {
-		put(key, Utils.newStringWithDateInfo(saveTime, value));
+		debug("10 --- key:" + key + " value:" + value + " saveTime:" + saveTime);
+		put(key, Utils.newStringWithDateInfo(saveTime, value)); // 构建的value: "1468835781656-second "
 	}
 
 	/**
@@ -575,6 +592,7 @@ public class ACache {
 		protected File cacheDir;
 
 		private ACacheManager(File cacheDir, long sizeLimit, int countLimit) {
+			debug("5 ---- cacheDir.getAbsoluteFile():" + cacheDir.getAbsoluteFile());
 			this.cacheDir = cacheDir;
 			this.sizeLimit = sizeLimit;
 			this.countLimit = countLimit;
@@ -640,6 +658,7 @@ public class ACache {
 		}
 
 		private File newFile(String key) {
+			debug("12 --- new File(key):" + key + " key.hashCode:" + key.hashCode());
 			return new File(cacheDir, key.hashCode() + "");
 		}
 
@@ -723,12 +742,11 @@ public class ACache {
 		 * @return true：到期了 false：还没有到期
 		 */
 		private static boolean isDue(byte[] data) {
-			String[] strs = getDateInfoFromDate(data);
+			String[] strs = getDateInfoFromData(data);
 			if (strs != null && strs.length == 2) {
 				String saveTimeStr = strs[0];
 				while (saveTimeStr.startsWith("0")) {
-					saveTimeStr = saveTimeStr
-							.substring(1, saveTimeStr.length());
+					saveTimeStr = saveTimeStr.substring(1, saveTimeStr.length());
 				}
 				long saveTime = Long.valueOf(saveTimeStr);
 				long deleteAfter = Long.valueOf(strs[1]);
@@ -753,7 +771,7 @@ public class ACache {
 
 		private static String clearDateInfo(String strInfo) {
 			if (strInfo != null && hasDateInfo(strInfo.getBytes())) {
-				strInfo = strInfo.substring(strInfo.indexOf(mSeparator) + 1,
+				strInfo = strInfo.substring(strInfo.indexOf(SEPARATOR_SPACE) + 1,
 						strInfo.length());
 			}
 			return strInfo;
@@ -761,7 +779,7 @@ public class ACache {
 
 		private static byte[] clearDateInfo(byte[] data) {
 			if (hasDateInfo(data)) {
-				return copyOfRange(data, indexOf(data, mSeparator) + 1,
+				return copyOfRange(data, indexOf(data, SEPARATOR_SPACE) + 1,
 						data.length);
 			}
 			return data;
@@ -769,14 +787,17 @@ public class ACache {
 
 		private static boolean hasDateInfo(byte[] data) {
 			return data != null && data.length > 15 && data[13] == '-'
-					&& indexOf(data, mSeparator) > 14;
+					&& indexOf(data, SEPARATOR_SPACE) > 14;
 		}
 
-		private static String[] getDateInfoFromDate(byte[] data) {
+		private static String[] getDateInfoFromData(byte[] data) {
 			if (hasDateInfo(data)) {
 				String saveDate = new String(copyOfRange(data, 0, 13));
-				String deleteAfter = new String(copyOfRange(data, 14,
-						indexOf(data, mSeparator)));
+				String deleteAfter = new String(copyOfRange(data, 14, indexOf(data, SEPARATOR_SPACE)));
+
+				debug("get DateInfoFromData save date:" + saveDate);
+				debug("get DateInfoFromData deleteAfter:" + deleteAfter);
+
 				return new String[] { saveDate, deleteAfter };
 			}
 			return null;
@@ -796,19 +817,19 @@ public class ACache {
 			if (newLength < 0)
 				throw new IllegalArgumentException(from + " > " + to);
 			byte[] copy = new byte[newLength];
-			System.arraycopy(original, from, copy, 0,
-					Math.min(original.length - from, newLength));
+			System.arraycopy(original, from, copy, 0, Math.min(original.length - from, newLength));
 			return copy;
 		}
 
-		private static final char mSeparator = ' ';
+		private static final char SEPARATOR_SPACE  = ' ';
+		private static final char SEPARATOR_HYPHEN = '-';
 
 		private static String createDateInfo(int second) {
 			String currentTime = System.currentTimeMillis() + "";
 			while (currentTime.length() < 13) {
 				currentTime = "0" + currentTime;
 			}
-			return currentTime + "-" + second + mSeparator; // "1468835781656-10 "
+			return currentTime + "-" + second + SEPARATOR_SPACE; // "1468835781656-60 "
 		}
 
 		/*
@@ -866,6 +887,10 @@ public class ACache {
 			}
 			return new BitmapDrawable(bm);
 		}
+	}
+
+	private static void debug(String debugInfo){
+		System.out.println(debugInfo);
 	}
 
 }
