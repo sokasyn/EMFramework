@@ -81,14 +81,18 @@ public class MainActivity extends AppCompatActivity {
 
         Properties prop = new Properties();
         try{
-            InputStream is = this.getApplicationContext().getResources().openRawResource(R.raw.account);
+            InputStream is = this.getResources().openRawResource(R.raw.account);
             prop.load(is);
+            prop.list(System.out);
         }catch (IOException e){
             e.printStackTrace();
         }
 
         String account =  prop.getProperty("account");
         debug("get account name from property:" + account);
+
+        String password =  prop.getProperty("password");
+        debug("get account password from property:" + password);
     }
 
     private void btnShowClicked(){

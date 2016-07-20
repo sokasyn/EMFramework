@@ -48,9 +48,13 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void writePreference(){
+    public void testWhatever(){
+        int a = 2;
+        debug(Integer.toBinaryString(a));
 
-        Context context = new MockContext();
-        System.out.println("context:" + context);
+    }
+
+    private void debug(String string){
+        System.out.println(string);
     }
 }
