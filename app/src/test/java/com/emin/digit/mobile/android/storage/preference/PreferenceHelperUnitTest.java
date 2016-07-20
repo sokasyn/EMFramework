@@ -84,7 +84,7 @@ public class PreferenceHelperUnitTest extends AndroidTestCase{
         String pid3  = "_" + android.os.Process.myPid();
         debug("pid1 :" + pid1);
         debug("pid2 :" + pid2);
-        debug("pid3 :" + pid3);
+        debug("pid3 :" + pid1);
 
     }
 

@@ -9,6 +9,12 @@ import android.widget.EditText;
 import com.emin.digit.mobile.android.storage.cache.ACache;
 import com.emin.digit.mobile.android.util.StringUtil;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button btnStart;
@@ -67,6 +73,22 @@ public class MainActivity extends AppCompatActivity {
         // 1468894924463-60 Samson
         // 1468894924463-0 A
 //        cache.put(inputKey, inputValue, 60 * 5);
+        testProperties();
+
+    }
+
+    private void testProperties(){
+
+        Properties prop = new Properties();
+        try{
+            InputStream is = this.getApplicationContext().getResources().openRawResource(R.raw.account);
+            prop.load(is);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        String account =  prop.getProperty("account");
+        debug("get account name from property:" + account);
     }
 
     private void btnShowClicked(){
@@ -184,8 +206,6 @@ public class MainActivity extends AppCompatActivity {
         return cachedSecondsString;
     }
 
-
-
     private String createDateInfo(String data,int cahedSeconds){
         return getCurrentMillis() + SEPARATOR_HYPHEN + cahedSeconds + SEPARATOR_SPACE;
     }
@@ -196,6 +216,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void debug(String stringInfo){
         System.out.println(stringInfo);
+    }
+
+
+    private void testPropertyFile(){
+        Properties property = new Properties();
+        String filePath = "";
+        try{
+            FileInputStream fis = new FileInputStream(filePath);
+            property.load(fis);
+        }catch (FileNotFoundException fileNotFoundE){
+            fileNotFoundE.printStackTrace();
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+
+        String name = property.getProperty("name","");
     }
 
 }
