@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.emin.digit.mobile.android.storage.cache.ACache;
+import com.emin.digit.mobile.android.storage.cache.FileCache;
 import com.emin.digit.mobile.android.util.StringUtil;
 
 import java.io.FileInputStream;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         String inputValue = getInputValue();
 
         // 创建ACache实例
-        ACache cache = ACache.get(this);
+        FileCache cache = FileCache.get(this);
 
         // 1468894924463-60 Samson
         // 1468894924463-0 A
@@ -93,11 +93,13 @@ public class MainActivity extends AppCompatActivity {
 
         String password =  prop.getProperty("password");
         debug("get account password from property:" + password);
+
+//        TimeUnit.SECONDS;
     }
 
     private void btnShowClicked(){
         String inputKey = getInputKey();
-        ACache cache = ACache.get(this);
+        FileCache cache = FileCache.get(this);
         String valueForKey = cache.getAsString(inputKey);
         valueText.setText(valueForKey);
     }

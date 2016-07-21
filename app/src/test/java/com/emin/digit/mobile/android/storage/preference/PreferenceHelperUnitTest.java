@@ -12,6 +12,7 @@ import android.test.mock.MockApplication;
 import android.test.mock.MockContext;
 
 import com.emin.digit.mobile.android.SharedPreferencesMockContext;
+import com.emin.digit.mobile.android.storage.cache.CacheManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -69,12 +70,12 @@ public class PreferenceHelperUnitTest extends AndroidTestCase{
 
     @Test
     public void testHas(){
-        testPid();
-        String key = "name";
-        debug("key:" + key.hashCode());
-
-        String key2 = "first name";
-        debug("key2:" + key2.hashCode());
+//        testPid();
+//        String key = "name";
+//        debug("key:" + key.hashCode());
+//
+//        String key2 = "first name";
+//        debug("key2:" + key2.hashCode());
     }
 
     @Test

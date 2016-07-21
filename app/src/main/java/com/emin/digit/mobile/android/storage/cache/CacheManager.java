@@ -7,26 +7,30 @@ import java.util.HashMap;
  */
 public class CacheManager {
 
-    private static HashMap dataMap = new HashMap();
+    private static HashMap<String,CacheManager> map = new HashMap<String,CacheManager>();
 
-    // 单例
-    private static CacheManager ourInstance = new CacheManager();
+    private CacheModel cacheModel;
+    private CacheConfig config;
 
-    // 获取单例
-    public static CacheManager getInstance() {
-        return ourInstance;
+    private CacheManager(CacheConfig config){
+        cacheModel = new CacheModel(config.getKey());
     }
 
-    // 私有构造方法
-    private CacheManager() {
-
+    public synchronized static CacheManager getInstance(CacheConfig config){
+        CacheManager cacheManager = map.get(config.getKey());
+        if( cacheManager == null) {
+            cacheManager = new CacheManager(config);
+            map.put(config.getKey(),cacheManager);
+        }
+        return cacheManager;
     }
 
-    private static String myPid() {
-        return "_" + android.os.Process.myPid();
+    public static CacheManager create(String key){
+        CacheConfig config = new CacheConfig();
+        config.setKey(key);
+        return getInstance(config);
+
+
     }
-
-
-
 
 }
