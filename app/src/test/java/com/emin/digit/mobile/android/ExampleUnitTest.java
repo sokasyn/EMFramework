@@ -113,10 +113,7 @@ public class ExampleUnitTest {
         System.out.println(testMap.get("b"));
         System.out.println(testMap.get("c"));
 
-        /**
-         * 这里sleep4秒钟过后，
-         * 缓存都失效，再get就会根据绑定的function去获得value放在map中了。
-         */
+       // 模拟过期时间之后，测试缓存数据过期，被清除
         try {
             Thread.sleep(4000);
         } catch (InterruptedException e) {

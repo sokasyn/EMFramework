@@ -7,7 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.emin.digit.mobile.android.storage.cache.FileCache;
+import com.emin.digit.mobile.android.storage.database.v2.DatabaseAdaptor;
+import com.emin.digit.mobile.android.storage.database.v2.DatabaseHybrid;
 import com.emin.digit.mobile.android.util.StringUtil;
+
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -73,8 +77,17 @@ public class MainActivity extends AppCompatActivity {
         // 1468894924463-60 Samson
         // 1468894924463-0 A
 //        cache.put(inputKey, inputValue, 60 * 5);
-        testProperties();
+//        testProperties();
+        testDbAdaptor();
 
+    }
+
+    private void testDbAdaptor(){
+        DatabaseAdaptor dbAdaptor = new DatabaseAdaptor(new DatabaseHybrid());
+        dbAdaptor.insert(new JSONObject());
+
+
+        DatabaseAdaptor db = DatabaseAdaptor.getIn
     }
 
     private void testProperties(){
