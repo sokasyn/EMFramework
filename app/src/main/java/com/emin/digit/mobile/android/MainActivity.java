@@ -1,16 +1,19 @@
 package com.emin.digit.mobile.android;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.emin.digit.mobile.android.Commom.ConstantTables;
 import com.emin.digit.mobile.android.storage.cache.FileCache;
-import com.emin.digit.mobile.android.storage.database.v2.DatabaseAdaptor;
-import com.emin.digit.mobile.android.storage.database.v2.DatabaseHybrid;
+import com.emin.digit.mobile.android.storage.database.util.DebugLog;
+import com.emin.digit.mobile.android.storage.database.v2.DaoConfig;
+import com.emin.digit.mobile.android.storage.database.v2.DatabaseManager;
 import com.emin.digit.mobile.android.util.StringUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
@@ -20,6 +23,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private Button btnStart;
     private Button btnShow;
@@ -67,27 +72,65 @@ public class MainActivity extends AppCompatActivity {
     private void btnGoClicked(){
         // 测试缓存
         // Key
-        String inputKey = getInputKey();
+//        String inputKey = getInputKey();
         // value
-        String inputValue = getInputValue();
+//        String inputValue = getInputValue();
 
         // 创建ACache实例
-        FileCache cache = FileCache.get(this);
+//        FileCache cache = FileCache.get(this);
 
         // 1468894924463-60 Samson
         // 1468894924463-0 A
 //        cache.put(inputKey, inputValue, 60 * 5);
 //        testProperties();
-        testDbAdaptor();
 
+        try{
+            debug("testDbAdaptor....");
+            testDbAdaptor();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
-    private void testDbAdaptor(){
-        DatabaseAdaptor dbAdaptor = new DatabaseAdaptor(new DatabaseHybrid());
-        dbAdaptor.insert(new JSONObject());
+    private static final String DB_NAME   = "EM_DB_001.db";
+    private static final String DB_NAME_2 = "EM_DB_002.db";
+    private void testDbAdaptor() throws JSONException{
+//        DatabaseAdaptor dbAdaptor = new DatabaseAdaptor(new DatabaseHybrid());
+//        dbAdaptor.insert(new JSONObject());
+
+        JSONObject tableJson = new JSONObject();
+        // table:user
+        tableJson.put(ConstantTables.TBL_USER,"id,name,age");
+
+        // table:account
+        tableJson.put(ConstantTables.TBL_ACCOUNT,"id,name,password");
+
+        // table:address
+        tableJson.put(ConstantTables.TBL_ADDRESS,"id,pid,name");
+        String jsonStr = tableJson.toString();
 
 
-        DatabaseAdaptor db = DatabaseAdaptor.getIn
+        // 创建数据库EM_DB_001.db
+        DaoConfig daoConfig = new DaoConfig();
+        daoConfig.setContext(this);
+        daoConfig.setDbName(DB_NAME);
+        DatabaseManager dbMgr = DatabaseManager.getInstance(daoConfig);
+        DebugLog.i(TAG,"daoConfig :" + daoConfig);
+        DebugLog.i(TAG,"DatabaseManager dbMgr:" + dbMgr);
+        dbMgr.createTable(tableJson);
+
+        // 创建数据库EM_DB_002.db
+        DaoConfig daoConfig2 = new DaoConfig();
+        daoConfig2.setContext(this);
+        daoConfig2.setDbName(DB_NAME_2);
+        DatabaseManager dbMgr2 = DatabaseManager.getInstance(daoConfig2);
+        DebugLog.i(TAG,"daoConfig2 :" + daoConfig2);
+        DebugLog.i(TAG,"DatabaseManager dbMgr2:" + dbMgr2);
+        dbMgr2.createTable(tableJson);
+
+        // 创建默认数据库
+        DatabaseManager dbMgr3 = DatabaseManager.getInstance(this);
+        dbMgr3.createTable(tableJson);
     }
 
     private void testProperties(){

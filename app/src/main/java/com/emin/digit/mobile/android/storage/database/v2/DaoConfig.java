@@ -7,10 +7,13 @@ import android.content.Context;
  */
 public class DaoConfig {
 
+    private static final String DEFAULT_DB_NAME = "DefaultDb.db";
+    private static final int DEFAULT_VERSION = 1;
+
     private Context context;
     private String dbType;
-    private String dbName;
-    private int    dbVersion;
+    private String dbName = DEFAULT_DB_NAME;
+    private int    dbVersion = DEFAULT_VERSION;
     private String targetDirectory;
 
     public Context getContext() {

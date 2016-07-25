@@ -5,7 +5,7 @@ import org.json.JSONObject;
 /**
  * Created by Samson on 16/7/22.
  */
-public interface DatabaseOperator {
+public interface IDatabaseOperator {
 
     // ----------- 表级别操作 -----------
     public void createTable(JSONObject jsonObject);
@@ -22,5 +22,5 @@ public interface DatabaseOperator {
     public void query(JSONObject jsonObject);
 
     // 执行SQL
-    public void executeSql(String sqlString);
+    public void execSQL(String sqlString);
 }
