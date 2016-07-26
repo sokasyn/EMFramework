@@ -2,6 +2,7 @@ package com.emin.digit.mobile.android.storage.database.v2;
 
 import com.emin.digit.mobile.android.storage.database.v2.base.Database;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -15,13 +16,13 @@ public class OtherDatabase extends Database {
     }
 
     @Override
-    public void dropTable(JSONObject jsonObject) {
-        super.dropTable(jsonObject);
+    public void dropTables(JSONArray jsonArray){
+//        super.dropTables(jsonArray);
     }
 
     @Override
     public void updateTable(JSONObject jsonObject) {
-        super.updateTable(jsonObject);
+//        super.updateTable(jsonObject);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class OtherDatabase extends Database {
     }
 
     @Override
-    public void query(JSONObject jsonObject) {
-
+    public JSONArray query(JSONObject jsonObject) {
+        return null;
     }
 
     @Override

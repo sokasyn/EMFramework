@@ -10,7 +10,6 @@ public class DebugLog {
     private static boolean isDebug = true;
 
     public static void i(String tag, String msg) {
-        System.out.println(tag + " " + msg);
         if (isDebug) {
             android.util.Log.i(tag, msg);
         }

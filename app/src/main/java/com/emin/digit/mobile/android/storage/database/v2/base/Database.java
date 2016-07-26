@@ -4,6 +4,8 @@ import com.emin.digit.mobile.android.storage.database.util.DebugLog;
 import com.emin.digit.mobile.android.storage.database.v2.SqlBuilder;
 import com.emin.digit.mobile.android.storage.database.v2.SqlInfo;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
@@ -15,7 +17,7 @@ public abstract class Database implements IDatabaseOperator {
 
     private static final String TAG = Database.class.getSimpleName();
 
-    private Database database;
+//    private Database database;
 
     @Override
     public void createTable(JSONObject jsonObject) {
@@ -23,22 +25,22 @@ public abstract class Database implements IDatabaseOperator {
     }
 
     @Override
-    public void dropTable(JSONObject jsonObject) {
+    public void dropTables(JSONArray jsonArray) throws JSONException {
 
     }
 
     @Override
-    public void updateTable(JSONObject jsonObject) {
+    public void updateTable(JSONObject jsonObject) throws JSONException{
 
     }
 
-    public abstract void insert(JSONObject jsonObject);
+    public abstract void insert(JSONObject jsonObject) throws JSONException;
 
-    public abstract void delete(JSONObject jsonObject);
+    public abstract void delete(JSONObject jsonObject) throws JSONException;
 
-    public abstract void update(JSONObject jsonObject);
+    public abstract void update(JSONObject jsonObject) throws JSONException;
 
-    public abstract void query(JSONObject jsonObject);
+    public abstract JSONArray query(JSONObject jsonObject) throws JSONException;
 
     public abstract void execSQL(String sqlString);
 }

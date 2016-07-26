@@ -1,4 +1,4 @@
-package com.emin.digit.mobile.android.storage.database;
+package com.emin.digit.mobile.android.storage.database.v1;
 
 import android.content.Context;
 

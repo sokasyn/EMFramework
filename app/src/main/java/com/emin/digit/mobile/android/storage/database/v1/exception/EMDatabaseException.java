@@ -1,4 +1,4 @@
-package com.emin.digit.mobile.android.storage.database.exception;
+package com.emin.digit.mobile.android.storage.database.v1.exception;
 
 /**
  * Created by Samson on 16/7/4.

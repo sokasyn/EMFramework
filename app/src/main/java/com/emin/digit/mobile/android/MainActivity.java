@@ -2,17 +2,19 @@ package com.emin.digit.mobile.android;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.emin.digit.mobile.android.Commom.ConstantTables;
+import com.emin.digit.mobile.android.commom.ConstantTables;
 import com.emin.digit.mobile.android.storage.cache.FileCache;
 import com.emin.digit.mobile.android.storage.database.util.DebugLog;
 import com.emin.digit.mobile.android.storage.database.v2.DaoConfig;
 import com.emin.digit.mobile.android.storage.database.v2.DatabaseManager;
 import com.emin.digit.mobile.android.util.StringUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         String jsonStr = tableJson.toString();
 
 
+        /*
         // 创建数据库EM_DB_001.db
         DaoConfig daoConfig = new DaoConfig();
         daoConfig.setContext(this);
@@ -127,10 +130,45 @@ public class MainActivity extends AppCompatActivity {
         DebugLog.i(TAG,"daoConfig2 :" + daoConfig2);
         DebugLog.i(TAG,"DatabaseManager dbMgr2:" + dbMgr2);
         dbMgr2.createTable(tableJson);
+        */
 
         // 创建默认数据库
         DatabaseManager dbMgr3 = DatabaseManager.getInstance(this);
         dbMgr3.createTable(tableJson);
+
+
+        /*
+        var jsonObject =
+        { "T_USER":{
+            {"SELECT":["USER_ID","AGE"]},
+            {"FROM":}
+            {"WHERE":{"USER_ID":2}}
+           }
+        }
+        */
+
+        // 查询
+        JSONObject jsonObject = new JSONObject();
+
+        JSONObject valForTblObj = new JSONObject();
+
+        // SELECT 部分
+        JSONArray selectJson = new JSONArray();
+        selectJson.put(0,"ID");
+        selectJson.put(1,"NAME");
+        valForTblObj.put("SELECT",selectJson);
+
+        // WHERE 部分
+        JSONObject whereJson = new JSONObject();
+        whereJson.put("ID",2);
+        valForTblObj.put("WHERE",whereJson);
+
+//        valForTblObj.put("FROM",null);
+        jsonObject.put(ConstantTables.TBL_USER,valForTblObj);
+
+        DebugLog.i(TAG,"query jsonObject:" + jsonObject.toString());
+        dbMgr3.query(jsonObject);
+
     }
 
     private void testProperties(){

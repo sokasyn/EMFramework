@@ -1,4 +1,4 @@
-package com.emin.digit.mobile.android.Commom;
+package com.emin.digit.mobile.android.commom;
 
 /**
  * Created by Samson on 16/7/25.

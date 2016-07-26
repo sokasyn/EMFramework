@@ -1,9 +1,9 @@
-package com.emin.digit.mobile.android.storage.database;
+package com.emin.digit.mobile.android.storage.database.v1;
 
 
 import android.util.Log;
 
-import com.emin.digit.mobile.android.storage.database.exception.EMDatabaseException;
+import com.emin.digit.mobile.android.storage.database.v1.exception.EMDatabaseException;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.emin.digit.mobile.android.storage.database;
+package com.emin.digit.mobile.android.storage.database.v1;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.emin.digit.mobile.android.storage.database.exception.EMDatabaseException;
+import com.emin.digit.mobile.android.storage.database.v1.exception.EMDatabaseException;
 
 import java.io.File;
 import java.io.IOException;

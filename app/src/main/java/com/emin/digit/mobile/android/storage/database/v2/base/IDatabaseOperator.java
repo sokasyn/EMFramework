@@ -1,5 +1,7 @@
 package com.emin.digit.mobile.android.storage.database.v2.base;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -9,17 +11,17 @@ public interface IDatabaseOperator {
 
     // ----------- 表级别操作 -----------
     public void createTable(JSONObject jsonObject);
-    public void dropTable(JSONObject jsonObject);
-    public void updateTable(JSONObject jsonObject);
+    public void dropTables(JSONArray jsonArray) throws JSONException;
+    public void updateTable(JSONObject jsonObject) throws JSONException;
 
     // ----------- 数据级别操作 -----------
-    public void insert(JSONObject jsonObject);
+    public void insert(JSONObject jsonObject) throws JSONException;
 
-    public void delete(JSONObject jsonObject);
+    public void delete(JSONObject jsonObject) throws JSONException;
 
-    public void update(JSONObject jsonObject);
+    public void update(JSONObject jsonObject) throws JSONException;
 
-    public void query(JSONObject jsonObject);
+    public JSONArray query(JSONObject jsonObject) throws JSONException;
 
     // 执行SQL
     public void execSQL(String sqlString);

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.emin.digit.mobile.android.storage.database.util.DebugLog;
 import com.emin.digit.mobile.android.storage.database.v2.base.Database;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,35 +95,36 @@ public class DatabaseManager {
         sqliteDatabase.createTable(jsonObject);
     }
 
-    public void dropTable(JSONObject jsonObject) {
-        sqliteDatabase.dropTable(jsonObject);
+    public void dropTable(JSONArray jsonArray) throws JSONException{
+        sqliteDatabase.dropTables(jsonArray);
     }
 
 
-    public void updateTable(JSONObject jsonObject) {
+    public void updateTable(JSONObject jsonObject) throws JSONException{
         sqliteDatabase.updateTable(jsonObject);
     }
 
     // - - - - - - - - - - - - - 数据库记录级别操作 - - - - - - - - - - - - -
 
 
-    public void insert(JSONObject jsonObject){
+    public void insert(JSONObject jsonObject) throws JSONException{
         sqliteDatabase.insert(jsonObject);
     }
 
 
-    public void delete(JSONObject jsonObject) {
+    public void delete(JSONObject jsonObject) throws JSONException{
         sqliteDatabase.delete(jsonObject);
     }
 
 
-    public void update(JSONObject jsonObject) {
+    public void update(JSONObject jsonObject) throws JSONException {
         sqliteDatabase.update(jsonObject);
     }
 
 
-    public void query(JSONObject jsonObject) {
-
+    public JSONObject query(JSONObject jsonObject) throws JSONException{
+        JSONObject result = sqliteDatabase.query(jsonObject);
+        return result;
     }
 
 }
