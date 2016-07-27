@@ -2,7 +2,7 @@ package com.emtest.data;
 
 import android.util.Log;
 
-import com.emin.digit.mobile.android.commom.ConstantTables;
+import com.emin.digit.mobile.android.commom.ConstantTable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ public class BuildDeleteJSON {
             case 0: {
                 JSONObject whereObj = new JSONObject();
                 whereObj.put("name", "Kate0");
-                dataObj.put(ConstantTables.TBL_USER, whereObj);
+                dataObj.put(ConstantTable.TBL_USER, whereObj);
                 break;
             }
             // 单个表,两个条件
@@ -34,7 +34,7 @@ public class BuildDeleteJSON {
                 JSONObject whereObj = new JSONObject();
                 whereObj.put("name", "Kate1");
                 whereObj.put("age", "1");
-                dataObj.put(ConstantTables.TBL_USER, whereObj);
+                dataObj.put(ConstantTable.TBL_USER, whereObj);
                 break;
             }
             // 空Json对象
@@ -46,7 +46,7 @@ public class BuildDeleteJSON {
             // {"USER":{}}
             case 3: {
                 JSONObject whereObj = new JSONObject();
-                dataObj.put(ConstantTables.TBL_USER, whereObj);
+                dataObj.put(ConstantTable.TBL_USER, whereObj);
                 break;
             }
 
@@ -55,11 +55,11 @@ public class BuildDeleteJSON {
             case 4: {
                 JSONObject userWhereObj = new JSONObject();
                 userWhereObj.put("name", "Kate4");
-                dataObj.put(ConstantTables.TBL_USER, userWhereObj);
+                dataObj.put(ConstantTable.TBL_USER, userWhereObj);
 
                 JSONObject accountWhereObj = new JSONObject();
                 accountWhereObj.put("name", "Sam1");
-                dataObj.put(ConstantTables.TBL_ACCOUNT, accountWhereObj);
+                dataObj.put(ConstantTable.TBL_ACCOUNT, accountWhereObj);
 
                 break;
             }
@@ -70,12 +70,12 @@ public class BuildDeleteJSON {
                 JSONObject userWhereObj = new JSONObject();
                 userWhereObj.put("name", "Kate5");
                 userWhereObj.put("age", "5");
-                dataObj.put(ConstantTables.TBL_USER, userWhereObj);
+                dataObj.put(ConstantTable.TBL_USER, userWhereObj);
 
                 JSONObject accountWhereObj = new JSONObject();
                 accountWhereObj.put("name", "Sam2");
                 accountWhereObj.put("password", "2");
-                dataObj.put(ConstantTables.TBL_ACCOUNT, accountWhereObj);
+                dataObj.put(ConstantTable.TBL_ACCOUNT, accountWhereObj);
                 break;
             }
             // 多个表在json中,三个条件
@@ -87,35 +87,35 @@ public class BuildDeleteJSON {
             case 7: {
                 JSONObject userWhereObj1 = new JSONObject();
                 userWhereObj1.put("name", "Kate6");
-                dataObj.put(ConstantTables.TBL_USER, userWhereObj1);
+                dataObj.put(ConstantTable.TBL_USER, userWhereObj1);
 
                 JSONObject userWhereObj2 = new JSONObject();
                 userWhereObj2.put("name", "Kate7");
-                dataObj.put(ConstantTables.TBL_USER, userWhereObj2);
+                dataObj.put(ConstantTable.TBL_USER, userWhereObj2);
 
                 JSONObject accountWhereObj = new JSONObject();
                 accountWhereObj.put("name", "Sam3");
                 accountWhereObj.put("password", "3");
-                dataObj.put(ConstantTables.TBL_ACCOUNT, accountWhereObj);
+                dataObj.put(ConstantTable.TBL_ACCOUNT, accountWhereObj);
 
                 JSONObject addressWhereObj = new JSONObject();
                 addressWhereObj.put("id", "1");
                 addressWhereObj.put("pid", "1");
                 addressWhereObj.put("name", "Michael");
-                dataObj.put(ConstantTables.TBL_ADDRESS, addressWhereObj);
+                dataObj.put(ConstantTable.TBL_ADDRESS, addressWhereObj);
                 break;
             }
             // 多个表在json中,多个表,都无条件
             case 8: {
                 JSONObject userWhereObj = new JSONObject();
 
-                dataObj.put(ConstantTables.TBL_USER, userWhereObj);
+                dataObj.put(ConstantTable.TBL_USER, userWhereObj);
 
                 JSONObject accountWhereObj = new JSONObject();
-                dataObj.put(ConstantTables.TBL_ACCOUNT, accountWhereObj);
+                dataObj.put(ConstantTable.TBL_ACCOUNT, accountWhereObj);
 
                 JSONObject addressWhereObj = new JSONObject();
-                dataObj.put(ConstantTables.TBL_ADDRESS, accountWhereObj);
+                dataObj.put(ConstantTable.TBL_ADDRESS, accountWhereObj);
                 break;
             }
         }

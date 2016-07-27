@@ -24,6 +24,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.emtest.activity.DatabaseActivity">
+            <intent-filter>
+                <action android:name="com.emtest.activity.DatabaseActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.emtest.activity.DatabaseQueryActivity">
+            <intent-filter>
+                <action android:name="com.emtest.activity.DatabaseQueryActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.emtest.activity.SingleQueryActivity">
+            <intent-filter>
+                <action android:name="com.emtest.activity.SingleQueryActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.emtest.activity.UnionQueryActivity" >
+            <intent-filter>
+                <action android:name="com.emtest.activity.UnionQueryActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

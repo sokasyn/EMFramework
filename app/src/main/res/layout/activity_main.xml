@@ -30,4 +30,10 @@
         android:layout_height="wrap_content"
         android:text="Show"/>
 
+    <Button
+        android:id="@+id/btnDatabase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Database"/>
+
 </LinearLayout>

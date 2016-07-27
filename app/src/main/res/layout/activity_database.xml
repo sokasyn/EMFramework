@@ -5,18 +5,52 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/btnTblCreate"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Button1" />
+        android:layout_height="wrap_content"
+        android:text="Table Create"
+        android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/btnTblDrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Button2" />
+        android:layout_height="wrap_content"
+        android:text="Table Drop"
+        android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/btnTblAlter"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Button3" />
+        android:layout_height="wrap_content"
+        android:text="Table Alter"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/btnRecordInsert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Record Insert"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnRecordDel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Record Delete"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnRecordUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Record Update"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnRecordQuery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Record Query"
+        android:textAllCaps="false" />
 
 </LinearLayout>

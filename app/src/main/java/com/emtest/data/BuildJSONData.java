@@ -5,11 +5,6 @@ package com.emtest.data;
  */
 public class BuildJSONData {
 
-
-
-
-
-
     // *********** 查询数据的测试 ***********
     // 针对单个表
     public String buildQueryWithTable(String tableName){

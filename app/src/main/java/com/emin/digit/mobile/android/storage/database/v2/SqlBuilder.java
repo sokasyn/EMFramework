@@ -16,6 +16,7 @@ import java.util.Iterator;
  * Created by Samson on 16/7/25.
  *
  * 数据库可执行sql语句的构造器
+ * 
  */
 public class SqlBuilder {
 
@@ -132,8 +133,6 @@ public class SqlBuilder {
 
         StringBuffer columnStr = new StringBuffer();
         StringBuffer valueStr = new StringBuffer();
-
-//      JSONObject jsonObj = new JSONObject(jsonString);
         Iterator it = recordObject.keys();
         while (it.hasNext()){
             String key = (String)it.next();
@@ -144,16 +143,15 @@ public class SqlBuilder {
         columnStr.deleteCharAt(columnStr.length() - 1);
         valueStr.deleteCharAt(valueStr.length() - 1);
 
+        // TODO: 16/7/27 生成的SQL在处理数据库表字段是数字类型的时候,是否不必转成字符串的形式,对数据库记录取值有无影响?
 //        insert into staff (staff_id,first_name,last_name,address_id,store_id,username) values(2,'Sam','Hillyer',3,1,'Sam');
         sqlBuffer.append(columnStr);
         sqlBuffer.append(") VALUES (");
         sqlBuffer.append(valueStr);
         sqlBuffer.append(")");
 
-        SqlInfo sqlInfo = new SqlInfo(sqlBuffer.toString());
-        return sqlInfo;
+        return new SqlInfo(sqlBuffer.toString());
     }
-
 
     /**
      * 构建删除数据表(一个或多个)的记录sql
@@ -313,6 +311,18 @@ public class SqlBuilder {
         return null;
     }
 
+    /**
+     *
+     *
+     * @param jsonObject
+     *      *                   { "T_USER":{
+     *                           {"SELECT":["USER_ID","AGE"]},
+     *                           {"WHERE":{"USER_ID":2}}
+     *                        }
+     *                    }
+     * @return
+     * @throws JSONException
+     */
     public static SqlInfo queryFromTable(JSONObject jsonObject) throws JSONException{
         DebugLog.i(TAG,jsonObject.toString());
         StringBuffer sqlBuffer = new StringBuffer();
@@ -323,15 +333,19 @@ public class SqlBuilder {
             sqlBuffer.append("SELECT ");
 
             JSONObject valueObj = jsonObject.getJSONObject(tableName);
-            // SELECT 部分
+            // SELECT 部分,如果无SELECT的JSON,则全表查询
             JSONArray selectArray = valueObj.optJSONArray("SELECT");
-            for(int i = 0; i < selectArray.length(); i++){
-                String value = selectArray.getString(i);
-                sqlBuffer.append(value);
-                sqlBuffer.append(",");
+            if(selectArray != null){
+                for(int i = 0; i < selectArray.length(); i++){
+                    String value = selectArray.getString(i);
+                    sqlBuffer.append(value);
+                    sqlBuffer.append(",");
+                }
+                // 删除最后一个逗号","
+                sqlBuffer.deleteCharAt(sqlBuffer.length() - 1);
+            }else {
+                sqlBuffer.append("*");
             }
-            // 删除最后一个逗号","
-            sqlBuffer.deleteCharAt(sqlBuffer.length() - 1);
             DebugLog.i(TAG,"拼接SELECT 部分:" + sqlBuffer.toString());
 
             // FROM 部分
@@ -339,11 +353,14 @@ public class SqlBuilder {
             sqlBuffer.append(tableName);
             DebugLog.i(TAG,"拼接FROM部分:" + sqlBuffer.toString());
 
-            // 拼接WHERE 部分
-            sqlBuffer.append(" WHERE ");
+            // 拼接WHERE 部分,如果无WHERE的JSON,则表示无条件查询
             JSONObject whereJson = valueObj.optJSONObject("WHERE");
-            String whereString = getColumnEqualValueString(whereJson);
-            sqlBuffer.append(whereString);
+            if(whereJson != null){
+                sqlBuffer.append(" WHERE ");
+                String whereString = getColumnEqualValueString(whereJson);
+                sqlBuffer.append(whereString);
+            }else{
+            }
             DebugLog.i(TAG,"拼接WHERE部分:" + sqlBuffer.toString());
 
             sqlInfo = new SqlInfo(sqlBuffer.toString());

@@ -9,8 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 /**
  * Created by Samson on 16/7/25.
  *
@@ -62,7 +60,6 @@ public class DatabaseManager {
 
     }
 
-
     // - - - - - - - - - - - - - 数据库的创建/打开 - - - - - - - - - - - - -
     /**
      * 通过数据库配置对象创建或打开数据库
@@ -72,9 +69,8 @@ public class DatabaseManager {
      * @return
      */
     private static Database createOrOpenDatabase(DaoConfig config){
-        DebugLog.i(TAG,"createOrOpenDatabase config:" + config);
         SqliteDatabase sqliteDb = SqliteDatabase.create(config);
-        DebugLog.i(TAG,"------ SqliteDatabase instance:" + sqliteDb);
+        DebugLog.i(TAG,"------ createOrOpenDatabase SqliteDatabase instance:" + sqliteDb);
         return sqliteDb;
     }
 
@@ -106,24 +102,20 @@ public class DatabaseManager {
 
     // - - - - - - - - - - - - - 数据库记录级别操作 - - - - - - - - - - - - -
 
-
     public void insert(JSONObject jsonObject) throws JSONException{
         sqliteDatabase.insert(jsonObject);
     }
-
 
     public void delete(JSONObject jsonObject) throws JSONException{
         sqliteDatabase.delete(jsonObject);
     }
 
-
     public void update(JSONObject jsonObject) throws JSONException {
         sqliteDatabase.update(jsonObject);
     }
 
-
-    public JSONObject query(JSONObject jsonObject) throws JSONException{
-        JSONObject result = sqliteDatabase.query(jsonObject);
+    public JSONArray query(JSONObject jsonObject) throws JSONException{
+        JSONArray result = sqliteDatabase.query(jsonObject);
         return result;
     }
 

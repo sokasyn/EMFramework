@@ -1,16 +1,15 @@
 package com.emin.digit.mobile.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.emin.digit.mobile.android.commom.ConstantTables;
+import com.emin.digit.mobile.android.commom.ConstantTable;
 import com.emin.digit.mobile.android.storage.cache.FileCache;
 import com.emin.digit.mobile.android.storage.database.util.DebugLog;
-import com.emin.digit.mobile.android.storage.database.v2.DaoConfig;
 import com.emin.digit.mobile.android.storage.database.v2.DatabaseManager;
 import com.emin.digit.mobile.android.util.StringUtil;
 
@@ -33,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText keyText;
     private EditText valueText;
 
+    private Button btnDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         keyText = (EditText)findViewById(R.id.idKey);
         valueText = (EditText)findViewById(R.id.idValue);
+
+        btnDatabase = (Button)findViewById(R.id.btnDatabase);
+        btnDatabase.setOnClickListener(clickListener);
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -62,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btnShow:{
                     btnShowClicked();
 //                    testExpired();
+                    break;
+                }
+                case R.id.btnDatabase:{
+                    Intent intent = new Intent();
+                    intent.setAction("com.emtest.activity.DatabaseActivity");
+                    startActivity(intent);
                     break;
                 }
                 default:{
@@ -102,13 +112,13 @@ public class MainActivity extends AppCompatActivity {
 
         JSONObject tableJson = new JSONObject();
         // table:user
-        tableJson.put(ConstantTables.TBL_USER,"id,name,age");
+        tableJson.put(ConstantTable.TBL_USER,"id,name,age");
 
         // table:account
-        tableJson.put(ConstantTables.TBL_ACCOUNT,"id,name,password");
+        tableJson.put(ConstantTable.TBL_ACCOUNT,"id,name,password");
 
         // table:address
-        tableJson.put(ConstantTables.TBL_ADDRESS,"id,pid,name");
+        tableJson.put(ConstantTable.TBL_ADDRESS,"id,pid,name");
         String jsonStr = tableJson.toString();
 
 
@@ -164,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         valForTblObj.put("WHERE",whereJson);
 
 //        valForTblObj.put("FROM",null);
-        jsonObject.put(ConstantTables.TBL_USER,valForTblObj);
+        jsonObject.put(ConstantTable.TBL_USER,valForTblObj);
 
         DebugLog.i(TAG,"query jsonObject:" + jsonObject.toString());
         dbMgr3.query(jsonObject);

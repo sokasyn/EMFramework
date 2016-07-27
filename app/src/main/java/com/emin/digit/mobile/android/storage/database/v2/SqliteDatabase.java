@@ -192,9 +192,9 @@ public class SqliteDatabase extends Database {
     public void insert(JSONObject jsonObject) throws JSONException{
 
         // table
-        Iterator tableKeyIterator = jsonObject.keys();
-        while(tableKeyIterator.hasNext()){
-            String tableName = (String ) tableKeyIterator.next();
+        Iterator tableKeyItr = jsonObject.keys();
+        while(tableKeyItr.hasNext()){
+            String tableName = (String) tableKeyItr.next();
             Object value = jsonObject.opt(tableName);
             Log.i(TAG,"value class:" + value.getClass().toString());
             if(value instanceof JSONArray){
@@ -323,10 +323,20 @@ public class SqliteDatabase extends Database {
             recordArray.put(index,recordObj);
             index++;
         }
+        if(cursor != null){
+            cursor.close();
+            cursor = null;
+        }
         return recordArray;
     }
 
-    public Cursor queryWithSqlInfo(SqlInfo sqlInfo){
+    public Cursor queryFromTable(JSONObject jsonObject) throws JSONException{
+        SqlInfo sqlInfo = SqlBuilder.queryFromTable(jsonObject);
+        Cursor cursor = queryWithSqlInfo(sqlInfo);
+        return cursor;
+    }
+
+    private Cursor queryWithSqlInfo(SqlInfo sqlInfo){
         return sqLiteDb.rawQuery(sqlInfo.getSql(),null);
     }
 
