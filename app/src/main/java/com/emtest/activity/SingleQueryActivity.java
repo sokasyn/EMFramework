@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Samson on 16/7/27.
@@ -37,7 +39,7 @@ public class SingleQueryActivity extends Activity {
     // Buttons
     private Button btnQueryStandard;
     private Button btnQueryNoSelect;
-    private Button  btnQueryNoWhere;
+    private Button btnQueryNoWhere;
 
     private ListView listView;
 
@@ -60,13 +62,14 @@ public class SingleQueryActivity extends Activity {
         btnQueryNoWhere.setOnClickListener(clickListener);
 
         listView = (ListView)findViewById(R.id.lvQuery);
-
+        listView.setOnItemClickListener(itemClickListener);
     }
 
     private void setupData(){
         updateListView();
     }
 
+    // Button的点击事件
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -90,10 +93,20 @@ public class SingleQueryActivity extends Activity {
         }
     };
 
+    // ListView的Item点击事件
+    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            DebugLog.d(TAG,"ListView item clicked..");
+            ListView lv = (ListView)adapterView;
+            HashMap<String,Object> map = (HashMap<String,Object>)lv.getItemAtPosition(position);
+            Toast.makeText(getApplicationContext(),position + "clicked",Toast.LENGTH_SHORT).show();
+        }
+    };
+
     /*
      * {"USER":{"SELECT":["NICK_NAME","AGE"],"WHERE":{"ID":1}}}
      */
-
     private void queryStandard(){
         try{
             JSONObject queryObj = BuildQueryJSON.buildQueryForSingleTable();
@@ -107,7 +120,6 @@ public class SingleQueryActivity extends Activity {
     }
 
     private void queryWithoutSelect(){
-
         try{
             JSONObject queryObj = BuildQueryJSON.buildQueryForSingleTableWithoutSelectColumns();
             DebugLog.d(TAG,"JSON for query no select:" + queryObj.toString());
@@ -133,21 +145,20 @@ public class SingleQueryActivity extends Activity {
 
     // - - - - - - - - - - - - - - - Test ListView - - - - - - - - - - - - - - -
     private void updateListView(){
-//        updateListViewWithArrayAdaper();
+//        updateListViewWithArrayAdapter();
         updateListViewWithSimpleAdapter();
     }
 
-
-
-    private void updateListViewWithArrayAdaper(){
+    // ArrayAdapter
+    private void updateListViewWithArrayAdapter(){
 //        String[] arrayData = getArray();
 //        ListAdapter arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_1,arrayData);
-
         List<String> listData = getArrayListData();
         ListAdapter arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_1,listData);
         listView.setAdapter(arrayAdapter);
     }
 
+    // ArrayAdapter 数据源
     private String[] getArray(){
         String[] array = new String[]{
                 "test1","test2","test3",
@@ -167,37 +178,28 @@ public class SingleQueryActivity extends Activity {
         return list;
     }
 
+    // SimpleAdapter
     private void updateListViewWithSimpleAdapter(){
-        SimpleAdapter adapter = new SimpleAdapter(this, getMapData(),
-                R.layout.list_test, new String[] { "ID", "NickName", "Age" },
+        SimpleAdapter adapter = new SimpleAdapter(this, getMapListData(),
+                R.layout.list_test, new String[] { "ID", "Name", "Age" },
                 new int[] { R.id.listNum, R.id.nickName, R.id.age });
         listView.setAdapter(adapter);
     }
 
-
 //    public SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-    private List<Map<String,Object>> getMapData(){
-
+    // SimpleAdapter 的数据源
+    private List<Map<String,Object>> getMapListData(){
+        int itemCount = 10;
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("ID", "1");
-        map.put("NickName", "1ABCDEFGFEFEFEF");
-        map.put("Age", "1");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("ID", "2");
-        map.put("NickName", "2ABCDEFGFEFEFEF");
-        map.put("Age", "2");
-        list.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("ID", "3");
-        map.put("NickName", "3ABCDEFGFEFEFEF");
-        map.put("Age", "3");
-        list.add(map);
-
+        int index = 1;
+        for(int i =0 ; i < itemCount; i++){
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("ID","" + "" + index);
+            map.put("Name","Name" + index);
+            map.put("Age","" + index);
+            list.add(map);
+            index++;
+        }
         return list;
     }
 

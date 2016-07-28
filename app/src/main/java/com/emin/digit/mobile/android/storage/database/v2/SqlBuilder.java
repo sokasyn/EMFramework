@@ -1,8 +1,6 @@
 package com.emin.digit.mobile.android.storage.database.v2;
 
-import android.database.SQLException;
-
-import com.emin.digit.mobile.android.exception.DatabaseException;
+import com.emin.digit.mobile.android.storage.database.v2.exception.DatabaseException;
 import com.emin.digit.mobile.android.storage.database.util.DebugLog;
 
 import org.json.JSONArray;
@@ -29,7 +27,7 @@ public class SqlBuilder {
 //        DebugLog.methodStart(className);
 
         StringBuffer sqlBuffer = new StringBuffer();
-        sqlBuffer.append("CREATE TABLE IF NOT EXISTS ");
+        sqlBuffer.append("create table if not exists ");
         sqlBuffer.append(tableName);
         sqlBuffer.append("( ");
         sqlBuffer.append(columnsDef);
@@ -44,7 +42,7 @@ public class SqlBuilder {
      * 构建删除所有数据表的sql
      */
     public static SqlInfo buildDropAllTablesSql() {
-        String sqlStr = "SELECT name FROM sqlite_master WHERE type ='table' AND name != 'sqlite_sequence'";
+        String sqlStr = "select name from sqlite_master where type ='table' and name != 'sqlite_sequence'";
         SqlInfo sqlInfo = new SqlInfo(sqlStr);
         return sqlInfo;
     }
@@ -77,7 +75,7 @@ public class SqlBuilder {
             throw new DatabaseException("Table name can not be null");
         }
         StringBuffer sqlBuffer = new StringBuffer();
-        sqlBuffer.append("DROP TABLE IF EXISTS ");
+        sqlBuffer.append("drop table if exists ");
         sqlBuffer.append(tableName);
         SqlInfo sqlInfo = new SqlInfo(sqlBuffer.toString());
         return sqlInfo;
@@ -109,7 +107,7 @@ public class SqlBuilder {
 
 
             }else{
-                sqlBuffer.append(" ADD COLUMN ");
+                sqlBuffer.append(" add column ");
                 sqlBuffer.append(columnObj.toString());
             }
         }
@@ -127,7 +125,7 @@ public class SqlBuilder {
      */
     public static SqlInfo buildInsertSqlForTable(String tableName, JSONObject recordObject){
         StringBuffer sqlBuffer = new StringBuffer();
-        sqlBuffer.append("INSERT INTO ");
+        sqlBuffer.append("insert into ");
         sqlBuffer.append(tableName);
         sqlBuffer.append(" (");
 
@@ -146,7 +144,7 @@ public class SqlBuilder {
         // TODO: 16/7/27 生成的SQL在处理数据库表字段是数字类型的时候,是否不必转成字符串的形式,对数据库记录取值有无影响?
 //        insert into staff (staff_id,first_name,last_name,address_id,store_id,username) values(2,'Sam','Hillyer',3,1,'Sam');
         sqlBuffer.append(columnStr);
-        sqlBuffer.append(") VALUES (");
+        sqlBuffer.append(") values (");
         sqlBuffer.append(valueStr);
         sqlBuffer.append(")");
 
@@ -187,12 +185,12 @@ public class SqlBuilder {
      */
     public static SqlInfo buildDeleteSqlForTable(String tableName, JSONObject whereJson){
         StringBuffer sqlBuffer = new StringBuffer();
-        sqlBuffer.append("DELETE FROM ");
+        sqlBuffer.append("delete from ");
         sqlBuffer.append(tableName);
 
 //        DELETE from user where name='Kate' and age='1' and ;
         if(whereJson != null && whereJson.length() != 0){
-            sqlBuffer.append(" WHERE ");
+            sqlBuffer.append(" where ");
             Iterator whereKeyIterator = whereJson.keys();
             while (whereKeyIterator.hasNext()){
                 String column = (String) whereKeyIterator.next();
@@ -202,7 +200,7 @@ public class SqlBuilder {
                 sqlBuffer.append(value);
                 sqlBuffer.append("'");
 
-                sqlBuffer.append(" AND ");
+                sqlBuffer.append(" and ");
             }
             sqlBuffer.delete(sqlBuffer.length() - 5, sqlBuffer.length()-1);
         }
@@ -222,13 +220,13 @@ public class SqlBuilder {
 
             JSONObject setJson,whereJson;
             try{
-                setJson = value.getJSONObject("SET");
+                setJson = value.getJSONObject("set");
             }catch (JSONException e){
                 throw new JSONException("无法获取构建update sql中的set部分JSON");
             }
 
             // 采用optJSONObject(), 如果获取不到
-            whereJson = value.optJSONObject("WHERE");
+            whereJson = value.optJSONObject("where");
 
             SqlInfo sqlInfo = buildUpdateSqlForTable(tableName,setJson,whereJson);
             sqlinfoList.add(sqlInfo);
@@ -236,16 +234,6 @@ public class SqlBuilder {
 
         return sqlinfoList;
     }
-    /*
-    {"TBL_USER":{
-            "SET":{"PASSWORD":"12345"},
-            "WHERE":{"USER_NAME":"COCO","AGE":20 }
-            }
-     }
-
-     var table = "TBL_USER";
-     var obj = { tableName:table, }
-     */
 
     /**
      * 更新数据表记录
@@ -262,17 +250,17 @@ public class SqlBuilder {
 
         // UPDATE TBL_USER SET PASSWORD = '12345' WHERE USER_NAME = 'COCO' AND AGE = 20;
         StringBuffer sqlBuffer = new StringBuffer();
-        sqlBuffer.append("UPDATE ");
+        sqlBuffer.append("update ");
         sqlBuffer.append(tableName);
         sqlBuffer.append(" ");
 
         // 拼接 SET 部分
-        sqlBuffer.append(" SET ");
+        sqlBuffer.append(" set ");
         String setFragment = getColumnEqualValueString(setJson);
         sqlBuffer.append(" " + setFragment);
 
         // 拼接 WHERE 部分
-        sqlBuffer.append(" WHERE ");
+        sqlBuffer.append(" where ");
         String whereFragment = getColumnEqualValueString(whereJson);
         sqlBuffer.append(" " + whereFragment);
 
@@ -294,47 +282,37 @@ public class SqlBuilder {
         return strBuffer.toString();
     }
 
-    /*
-     SELECT USER_ID,USER_NAME FROM T_USER WHERE USER_DEP = 'QA' AND GENDER =  ORDER BY GROUP BY;
-
-     var jsonObject =
-     { "T_USER":{
-            {"SELECT":["USER_ID","AGE"]},
-            {"WHERE":{"USER_ID":2}}
-        }
-     }
-     */
-
-    public static SqlInfo buildQuerySql(JSONObject jsonObject){
-
-        StringBuffer sqlBuffer = new StringBuffer();
-        return null;
-    }
 
     /**
-     *
+     * 构建查询sql
      *
      * @param jsonObject
-     *      *                   { "T_USER":{
-     *                           {"SELECT":["USER_ID","AGE"]},
-     *                           {"WHERE":{"USER_ID":2}}
-     *                        }
-     *                    }
+     *  示例:
+     *     { "t_user":{
+     *          {"select":["user_id","age","name"]},
+     *          {"where":{"age":20}},
+     *          {"page":{"pageNum":3,"sizePerPage":10}}
+     *       }
+     *     }
+     *
+     *  构建的SQL:select user_id,age,name from t_user where age=20 limit 10 offset 20
+     *  分页部分：第3页,每页10行,即最多10条，跳过前面两页的20条
+     *
      * @return
      * @throws JSONException
      */
-    public static SqlInfo queryFromTable(JSONObject jsonObject) throws JSONException{
+    public static SqlInfo buildQuerySql(JSONObject jsonObject) throws JSONException{
         DebugLog.i(TAG,jsonObject.toString());
         StringBuffer sqlBuffer = new StringBuffer();
         SqlInfo sqlInfo = null;
         Iterator<String> tableKeyItr = jsonObject.keys();
         if(tableKeyItr.hasNext()){
             String tableName = tableKeyItr.next();
-            sqlBuffer.append("SELECT ");
+            sqlBuffer.append("select ");
 
             JSONObject valueObj = jsonObject.getJSONObject(tableName);
             // SELECT 部分,如果无SELECT的JSON,则全表查询
-            JSONArray selectArray = valueObj.optJSONArray("SELECT");
+            JSONArray selectArray = valueObj.optJSONArray("select");
             if(selectArray != null){
                 for(int i = 0; i < selectArray.length(); i++){
                     String value = selectArray.getString(i);
@@ -349,26 +327,39 @@ public class SqlBuilder {
             DebugLog.i(TAG,"拼接SELECT 部分:" + sqlBuffer.toString());
 
             // FROM 部分
-            sqlBuffer.append(" FROM ");
+            sqlBuffer.append(" from ");
             sqlBuffer.append(tableName);
             DebugLog.i(TAG,"拼接FROM部分:" + sqlBuffer.toString());
 
             // 拼接WHERE 部分,如果无WHERE的JSON,则表示无条件查询
-            JSONObject whereJson = valueObj.optJSONObject("WHERE");
+            JSONObject whereJson = valueObj.optJSONObject("where");
             if(whereJson != null){
-                sqlBuffer.append(" WHERE ");
+                sqlBuffer.append(" where ");
                 String whereString = getColumnEqualValueString(whereJson);
                 sqlBuffer.append(whereString);
             }else{
             }
             DebugLog.i(TAG,"拼接WHERE部分:" + sqlBuffer.toString());
 
+            // 拼接分页部分 Limit 10 Offset 10 （跳过10行(如一页10行),取10行),即获取第二页的数据
+            JSONObject pageJson = valueObj.optJSONObject("page");
+            if(pageJson != null){
+                int pageNum = pageJson.optInt("pageNum");
+                int sizePerPage = pageJson.optInt("sizePerPage");
+
+                sqlBuffer.append(" limit ");
+                sqlBuffer.append(sizePerPage);
+                sqlBuffer.append(" offset ");
+                sqlBuffer.append((pageNum -1) * sizePerPage);
+            }else{
+            }
             sqlInfo = new SqlInfo(sqlBuffer.toString());
         }
         return sqlInfo;
     }
 
-    public static SqlInfo buildQuerySqlForTable(String tableName){
+    @Deprecated
+    public static SqlInfo buildQuerySqlForTable(String tableName ,JSONObject queryObject){
         return null;
     }
 

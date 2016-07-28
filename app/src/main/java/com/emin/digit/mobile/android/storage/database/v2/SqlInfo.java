@@ -5,6 +5,9 @@ package com.emin.digit.mobile.android.storage.database.v2;
  */
 public class SqlInfo {
 
+    /**
+     * 原生SQL语句字符串
+     */
     private String sqlStr;
 
     public SqlInfo(){

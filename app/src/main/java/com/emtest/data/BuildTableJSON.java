@@ -19,7 +19,7 @@ public class BuildTableJSON {
         createObj.put(ConstantTable.TBL_ACCOUNT,"id,name,password");
 
         // table:user
-        createObj.put(ConstantTable.TBL_USER,"id int PRIMARY KEY NOT NULL,nick_name varchar(16) NOT NULL,age integer,address_id int");
+        createObj.put(ConstantTable.TBL_USER,"id int PRIMARY KEY NOT NULL,name varchar(16) NOT NULL,age integer,address_id int");
 
         // table:address
         createObj.put(ConstantTable.TBL_ADDRESS,"id,pid,name");

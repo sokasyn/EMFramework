@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.emin.digit.mobile.android.storage.database.v2.exception.DatabaseException;
 import com.emin.digit.mobile.android.storage.database.util.DebugLog;
 import com.emin.digit.mobile.android.storage.database.v2.base.Database;
 
@@ -13,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -97,6 +100,33 @@ public class SqliteDatabase extends Database {
             daoMap.put(config.getDbName(),sqliteDb);
         }
         return sqliteDb;
+    }
+
+    public void close(){
+        sqLiteDb.close();
+    }
+
+    /**
+     * 在SD卡的指定目录上创建文件
+     *
+     * @param sdcardPath
+     * @param dbfilename
+     * @return
+     */
+    private SQLiteDatabase createDbFileOnSDCard(String sdcardPath, String dbfilename) {
+        File dbf = new File(sdcardPath, dbfilename);
+        if (!dbf.exists()) {
+            try {
+                if (dbf.createNewFile()) {
+                    return SQLiteDatabase.openOrCreateDatabase(dbf, null);
+                }
+            } catch (IOException ioex) {
+                throw new DatabaseException("数据库文件创建失败", ioex);
+            }
+        } else {
+            return SQLiteDatabase.openOrCreateDatabase(dbf, null);
+        }
+        return null;
     }
 
     // - - - - - - - - - - - - - 表级别操作 - - - - - - - - - - - - -
@@ -285,10 +315,13 @@ public class SqliteDatabase extends Database {
     }
 
     // - - - - - - - - - - 表记录查询 - - - - - - - - - -
-    /*
-     SELECT USER_NAME FROM T_USER WHERE USER_ID = 2;
+    /**
+     * 查询表记录
+     *
+     * @param jsonObject 查询JSON对象
+     * @return
+     * @throws JSONException
      */
-
     @Override
     public JSONArray query(JSONObject jsonObject) throws JSONException{
         return queryFromSingleTable(jsonObject);
@@ -309,7 +342,7 @@ public class SqliteDatabase extends Database {
      * @throws JSONException org.json.JSONException异常
      */
     public JSONArray queryFromSingleTable(JSONObject jsonObject) throws JSONException{
-        SqlInfo sqlInfo = SqlBuilder.queryFromTable(jsonObject);
+        SqlInfo sqlInfo = SqlBuilder.buildQuerySql(jsonObject);
         Cursor cursor = queryWithSqlInfo(sqlInfo);
         JSONArray recordArray = new JSONArray();
         int index = 0;
@@ -331,7 +364,7 @@ public class SqliteDatabase extends Database {
     }
 
     public Cursor queryFromTable(JSONObject jsonObject) throws JSONException{
-        SqlInfo sqlInfo = SqlBuilder.queryFromTable(jsonObject);
+        SqlInfo sqlInfo = SqlBuilder.buildQuerySql(jsonObject);
         Cursor cursor = queryWithSqlInfo(sqlInfo);
         return cursor;
     }
@@ -372,8 +405,19 @@ public class SqliteDatabase extends Database {
             Log.i(TAG,"arrayList is null.return now");
             return;
         }
-        for(int i = 0 ; i < sqlInfoList.size(); i++){
-            execSqlInfo(sqlInfoList.get(i));
+        sqLiteDb.beginTransaction();
+        try{
+            for(int i = 0 ; i < sqlInfoList.size(); i++){
+//            execSqlInfo(sqlInfoList.get(i));
+                sqLiteDb.execSQL(sqlInfoList.get(i).getSql());
+            }
+            sqLiteDb.setTransactionSuccessful();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            // 结束事务
+            sqLiteDb.endTransaction();
+            sqLiteDb.close();
         }
     }
 

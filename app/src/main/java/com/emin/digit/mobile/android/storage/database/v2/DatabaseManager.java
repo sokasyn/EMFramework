@@ -21,10 +21,10 @@ public class DatabaseManager {
 
     private static DatabaseManager instance = new DatabaseManager();
 
-    private static Database sqliteDatabase;
+    private static Database database;
 
     // TODO: 除了SQLite,将来还有其它的数据库类型?或者将来扩展成ORM形式？
-    private static Database ohterDatabase;
+//    private static Database ohterDatabase;
 
     /**
      *
@@ -37,7 +37,7 @@ public class DatabaseManager {
      * @return 数据库管理器的单例
      */
     public static DatabaseManager getInstance(DaoConfig config){
-        sqliteDatabase = createOrOpenDatabase(config);
+        database = createOrOpenDatabase(config);
         return instance;
     }
 
@@ -51,7 +51,7 @@ public class DatabaseManager {
     public static DatabaseManager getInstance(Context context){
         DaoConfig config = new DaoConfig();
         config.setContext(context);
-        sqliteDatabase = createOrOpenDatabase(config);
+        database = createOrOpenDatabase(config);
         return instance;
     }
 
@@ -59,6 +59,12 @@ public class DatabaseManager {
     private DatabaseManager(){
 
     }
+
+    // 数据库适配
+    public void getDbInstance(Database db){
+        
+    }
+
 
     // - - - - - - - - - - - - - 数据库的创建/打开 - - - - - - - - - - - - -
     /**
@@ -80,42 +86,106 @@ public class DatabaseManager {
      * 新建数据表
      * JSON对象中的每一个Key-value键值对都应当是一个以key为表名,value为字段列表定义的json字符串
      * 每一个key-value对,对应一张表
-     *  格式如:{"user":"name,age",
+     *  格式如:{"user":"id int primary key not null,name varchar(16) not null,age integer,address_id int",
      *         "account":"name,password",
      *         "address":"id,pid,name"}
-     *         表示创建user,account,address 三表
+     *         表示创建user,account,address 三表 其中,key对应的value可以带上列的约束,也可以不带
      *
      * @param jsonObject
      */
     public void createTable(JSONObject jsonObject) throws JSONException{
-        sqliteDatabase.createTable(jsonObject);
+        database.createTable(jsonObject);
     }
 
-    public void dropTable(JSONArray jsonArray) throws JSONException{
-        sqliteDatabase.dropTables(jsonArray);
+    /**
+     * 删除数据表
+     *
+     * @param jsonArray 要删除的数据表的JSON数组
+     * @throws JSONException org.json.JSONException异常
+     */
+    public void dropTables(JSONArray jsonArray) throws JSONException{
+        database.dropTables(jsonArray);
     }
 
-
+    /**
+     * 更新表的结构
+     *
+     * @param jsonObject 更新表的JSON对象
+     *                       {"TBL_USER":{
+     * "SET":{"PASSWORD":"12345"},
+     *          "WHERE":{"USER_NAME":"COCO","AGE":20 }
+     *       }
+     *  }
+     *
+     * @throws JSONException org.json.JSONException异常
+     */
     public void updateTable(JSONObject jsonObject) throws JSONException{
-        sqliteDatabase.updateTable(jsonObject);
+        database.updateTable(jsonObject);
     }
 
     // - - - - - - - - - - - - - 数据库记录级别操作 - - - - - - - - - - - - -
 
+    /**
+     * 新增数据库记录
+     *
+     * @param jsonObject
+     * @throws JSONException
+     */
     public void insert(JSONObject jsonObject) throws JSONException{
-        sqliteDatabase.insert(jsonObject);
+        database.insert(jsonObject);
     }
 
+    /**
+     * 删除一个或多个数据表记录
+     *
+     * @param jsonObject 删除表记录的JSON对象
+     * 格式:
+     * key为数据表的名称,value为删除数据的条件的JSON对象字符串
+     *        格式形如:
+     *        {"TABLE1":{"ID":100},
+     *         "TABLE2":{"ID":2,"NAME":"ABC"}
+     *         "TABLE3":{}}
+     *
+     *         删除TABLE1中ID为100的数据；
+     *         删除TABLE2中ID为2且NAME为ABC的数据;
+     *         删除TABLE3所有的数据
+     *
+     * @throws JSONException org.json.JSONException异常
+     */
     public void delete(JSONObject jsonObject) throws JSONException{
-        sqliteDatabase.delete(jsonObject);
+        database.delete(jsonObject);
     }
 
+    /**
+     * 更新数据表记录
+     *
+     * @param jsonObject
+     * @throws JSONException
+     */
     public void update(JSONObject jsonObject) throws JSONException {
-        sqliteDatabase.update(jsonObject);
+        database.update(jsonObject);
     }
 
+    /**
+     * 查询数据表记录
+     *
+     * @param jsonObject
+     *      *  示例:
+     *     { "t_user":{
+     *          {"select":["user_id","age","name"]},
+     *          {"where":{"age":20}},
+     *          {"page":{"pageNum":3,"sizePerPage":10}}
+     *       }
+     *     }
+     *
+     *  构建的SQL:select user_id,age,name from t_user where age=20 limit 10 offset 20
+     *  分页部分：第3页,每页10行,即最多10条，跳过前面两页的20条
+     *
+     * @return 记录的JSON数组
+     * @throws JSONException org.json.JSONException异常
+     */
     public JSONArray query(JSONObject jsonObject) throws JSONException{
-        JSONArray result = sqliteDatabase.query(jsonObject);
+        JSONArray result = database.query(jsonObject);
         return result;
     }
 
